@@ -18,7 +18,7 @@ import ImageUpload from "@/components/ImageUpload";
 import NutritionChart from "@/components/NutritionChart";
 import ControlPanel from "@/components/ControlPanel";
 import { recognizeFood } from "@/utils/foodRecognition";
-import { calculateDailyTotals, calculateMacroPercentages } from "@/utils/nutritionCalculator";
+import { calculateDailyTotals, calculateMacroPercentages, NutritionData } from "@/utils/nutritionCalculator";
 import { format } from 'date-fns';
 
 // Sample data for demonstration
@@ -71,7 +71,9 @@ const Index = () => {
       calories: food.calories,
       protein: food.protein,
       carbs: food.carbs,
-      fat: food.fat
+      fat: food.fat,
+      fiber: food.fiber || 0,  // Add default values for fiber and sugar
+      sugar: food.sugar || 0
     }))
   );
   

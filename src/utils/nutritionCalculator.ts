@@ -51,3 +51,23 @@ export const aggregateNutritionData = (entries: NutritionData[]): DailyTotals =>
 
   return result;
 };
+
+// Adding the missing functions that are imported in Index.tsx
+export const calculateDailyTotals = (nutritionData: NutritionData[]): DailyTotals => {
+  return aggregateNutritionData(nutritionData);
+};
+
+export const calculateMacroPercentages = (dailyTotals: DailyTotals) => {
+  const { protein, carbs, fat } = dailyTotals;
+  const total = protein + carbs + fat;
+  
+  if (total === 0) {
+    return { protein: 0, carbs: 0, fat: 0 };
+  }
+  
+  return {
+    protein: Math.round((protein / total) * 100),
+    carbs: Math.round((carbs / total) * 100), 
+    fat: Math.round((fat / total) * 100)
+  };
+};
