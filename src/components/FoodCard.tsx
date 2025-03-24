@@ -18,6 +18,8 @@ interface FoodCardProps {
   protein: number;
   carbs: number;
   fat: number;
+  fiber?: number;
+  sugar?: number;
   timestamp: string;
   onDelete?: (id: string) => void;
   onEdit?: (id: string) => void;
@@ -31,6 +33,8 @@ const FoodCard: React.FC<FoodCardProps> = ({
   protein,
   carbs,
   fat,
+  fiber,
+  sugar,
   timestamp,
   onDelete,
   onEdit

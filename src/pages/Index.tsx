@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useToast } from "@/hooks/use-toast";
 import { 
@@ -21,7 +20,7 @@ import { recognizeFood } from "@/utils/foodRecognition";
 import { calculateDailyTotals, calculateMacroPercentages, NutritionData } from "@/utils/nutritionCalculator";
 import { format } from 'date-fns';
 
-// Sample data for demonstration
+// Updated food data to include fiber and sugar
 const INITIAL_FOOD_DATA = [
   {
     id: '1',
@@ -31,6 +30,8 @@ const INITIAL_FOOD_DATA = [
     protein: 12,
     carbs: 30,
     fat: 18,
+    fiber: 5,
+    sugar: 2,
     timestamp: '8:30 AM - Breakfast'
   },
   {
@@ -41,6 +42,8 @@ const INITIAL_FOOD_DATA = [
     protein: 35,
     carbs: 20,
     fat: 22,
+    fiber: 4,
+    sugar: 3,
     timestamp: '12:45 PM - Lunch'
   },
   {
@@ -51,13 +54,29 @@ const INITIAL_FOOD_DATA = [
     protein: 42,
     carbs: 18,
     fat: 28,
+    fiber: 6,
+    sugar: 2,
     timestamp: '7:15 PM - Dinner'
   }
 ];
 
+// Update the food item interface to include fiber and sugar
+interface FoodItem {
+  id: string;
+  name: string;
+  imageUrl: string;
+  calories: number;
+  protein: number;
+  carbs: number;
+  fat: number;
+  fiber: number;
+  sugar: number;
+  timestamp: string;
+}
+
 const Index = () => {
   const { toast } = useToast();
-  const [foodData, setFoodData] = useState(INITIAL_FOOD_DATA);
+  const [foodData, setFoodData] = useState<FoodItem[]>(INITIAL_FOOD_DATA);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [recognizedFood, setRecognizedFood] = useState<any | null>(null);
@@ -72,8 +91,8 @@ const Index = () => {
       protein: food.protein,
       carbs: food.carbs,
       fat: food.fat,
-      fiber: food.fiber || 0,  // Add default values for fiber and sugar
-      sugar: food.sugar || 0
+      fiber: food.fiber,
+      sugar: food.sugar
     }))
   );
   
@@ -134,12 +153,14 @@ const Index = () => {
       calories: 350,
       protein: 15,
       carbs: 40,
-      fat: 12
+      fat: 12,
+      fiber: 3,
+      sugar: 5
     };
     
     const currentTime = format(new Date(), 'h:mm a');
     
-    const newFood = {
+    const newFood: FoodItem = {
       id: Date.now().toString(),
       name: foodName,
       imageUrl,
@@ -147,6 +168,8 @@ const Index = () => {
       protein: nutritionInfo.protein,
       carbs: nutritionInfo.carbs,
       fat: nutritionInfo.fat,
+      fiber: nutritionInfo.fiber,
+      sugar: nutritionInfo.sugar,
       timestamp: `${currentTime} - ${mealType}`
     };
     
