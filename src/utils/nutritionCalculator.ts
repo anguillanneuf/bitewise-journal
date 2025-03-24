@@ -1,4 +1,3 @@
-
 export interface NutritionData {
   calories: number;
   protein: number;
@@ -36,20 +35,22 @@ export const aggregateNutritionData = (entries: NutritionData[]): DailyTotals =>
     return { calories: 0, protein: 0, carbs: 0, fat: 0, fiber: 0, sugar: 0, mealCount: 0 };
   }
 
-  const result = entries.reduce(
+  const totalNutrition = entries.reduce(
     (acc, curr) => ({
       calories: acc.calories + curr.calories,
       protein: acc.protein + curr.protein,
       carbs: acc.carbs + curr.carbs,
       fat: acc.fat + curr.fat,
       fiber: acc.fiber + curr.fiber,
-      sugar: acc.sugar + curr.sugar,
-      mealCount: acc.mealCount + 1
+      sugar: acc.sugar + curr.sugar
     }),
-    { calories: 0, protein: 0, carbs: 0, fat: 0, fiber: 0, sugar: 0, mealCount: 0 } as DailyTotals
+    { calories: 0, protein: 0, carbs: 0, fat: 0, fiber: 0, sugar: 0 } as NutritionData
   );
-
-  return result;
+  
+  return {
+    ...totalNutrition,
+    mealCount: entries.length
+  } as DailyTotals;
 };
 
 // Adding the missing functions that are imported in Index.tsx
