@@ -1,84 +1,53 @@
 
-// Types for nutritional data
 export interface NutritionData {
   calories: number;
   protein: number;
   carbs: number;
   fat: number;
-  sugar?: number;
-  fiber?: number;
-  sodium?: number;
+  fiber: number;
+  sugar: number;
 }
 
-export interface DailyTotals {
-  calories: number;
-  protein: number;
-  carbs: number;
-  fat: number;
+export interface DailyTotals extends NutritionData {
   mealCount: number;
 }
 
-// Calculate daily totals from an array of nutrition data
-export const calculateDailyTotals = (
-  nutritionItems: NutritionData[]
-): DailyTotals => {
-  return nutritionItems.reduce(
-    (totals, item) => {
-      return {
-        calories: totals.calories + item.calories,
-        protein: totals.protein + item.protein,
-        carbs: totals.carbs + item.carbs,
-        fat: totals.fat + item.fat,
-        mealCount: totals.mealCount + 1,
-      };
-    },
-    { calories: 0, protein: 0, carbs: 0, fat: 0, mealCount: 0 }
+export const calculateNutrition = (foodName: string): NutritionData => {
+  // Mock data for demo purposes
+  const mockNutrition: Record<string, NutritionData> = {
+    apple: { calories: 95, protein: 0.5, carbs: 25, fat: 0.3, fiber: 4, sugar: 19 },
+    banana: { calories: 105, protein: 1.3, carbs: 27, fat: 0.4, fiber: 3.1, sugar: 14 },
+    "chicken breast": { calories: 165, protein: 31, carbs: 0, fat: 3.6, fiber: 0, sugar: 0 },
+    rice: { calories: 130, protein: 2.7, carbs: 28, fat: 0.3, fiber: 0.4, sugar: 0.1 },
+    broccoli: { calories: 55, protein: 3.7, carbs: 11, fat: 0.6, fiber: 5.2, sugar: 2.6 },
+    salmon: { calories: 208, protein: 20, carbs: 0, fat: 13, fiber: 0, sugar: 0 },
+    // Add more foods as needed
+  };
+
+  // Default nutritional values if food not found
+  const defaultNutrition: NutritionData = { calories: 100, protein: 2, carbs: 15, fat: 2, fiber: 1, sugar: 5 };
+
+  // Return the nutrition data for the food or the default if not found
+  return mockNutrition[foodName.toLowerCase()] || defaultNutrition;
+};
+
+export const aggregateNutritionData = (entries: NutritionData[]): DailyTotals => {
+  if (entries.length === 0) {
+    return { calories: 0, protein: 0, carbs: 0, fat: 0, fiber: 0, sugar: 0, mealCount: 0 };
+  }
+
+  const result = entries.reduce(
+    (acc, curr) => ({
+      calories: acc.calories + curr.calories,
+      protein: acc.protein + curr.protein,
+      carbs: acc.carbs + curr.carbs,
+      fat: acc.fat + curr.fat,
+      fiber: acc.fiber + curr.fiber,
+      sugar: acc.sugar + curr.sugar,
+      mealCount: acc.mealCount + 1
+    }),
+    { calories: 0, protein: 0, carbs: 0, fat: 0, fiber: 0, sugar: 0, mealCount: 0 } as DailyTotals
   );
-};
 
-// Calculate macronutrient percentages
-export const calculateMacroPercentages = (
-  protein: number,
-  carbs: number,
-  fat: number
-) => {
-  const total = protein + carbs + fat;
-  if (total === 0) return { proteinPercentage: 0, carbsPercentage: 0, fatPercentage: 0 };
-  
-  return {
-    proteinPercentage: Math.round((protein / total) * 100),
-    carbsPercentage: Math.round((carbs / total) * 100),
-    fatPercentage: Math.round((fat / total) * 100),
-  };
-};
-
-// Check if nutrition values meet daily recommended values
-export const evaluateNutrition = (dailyTotals: DailyTotals) => {
-  // These are general guidelines and should be personalized in a real app
-  const recommendations = {
-    calories: { min: 1800, max: 2500 },
-    protein: { min: 50, max: 100 }, // in grams
-    carbs: { min: 225, max: 325 }, // in grams
-    fat: { min: 44, max: 78 }, // in grams
-  };
-  
-  return {
-    calories: isInRange(dailyTotals.calories, recommendations.calories.min, recommendations.calories.max),
-    protein: isInRange(dailyTotals.protein, recommendations.protein.min, recommendations.protein.max),
-    carbs: isInRange(dailyTotals.carbs, recommendations.carbs.min, recommendations.carbs.max),
-    fat: isInRange(dailyTotals.fat, recommendations.fat.min, recommendations.fat.max),
-  };
-};
-
-// Helper function to check if a value is within range
-const isInRange = (value: number, min: number, max: number) => {
-  if (value < min) return 'low';
-  if (value > max) return 'high';
-  return 'good';
-};
-
-export default {
-  calculateDailyTotals,
-  calculateMacroPercentages,
-  evaluateNutrition
+  return result;
 };
