@@ -94,7 +94,7 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
             <DropdownMenuItem onClick={() => handleFilterSelect('Dinner')}>
               Dinner
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => handleFilterSelect('Snacks')}>
+            <DropdownMenuItem onClick={() => handleFilterSelect('Snack')}>
               Snacks
             </DropdownMenuItem>
           </DropdownMenuContent>

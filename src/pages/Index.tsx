@@ -83,6 +83,7 @@ const Index = () => {
   const [foodName, setFoodName] = useState('');
   const [mealType, setMealType] = useState('Breakfast');
   const [processingImage, setProcessingImage] = useState(false);
+  const [activeFilter, setActiveFilter] = useState('All');
   
   // Calculate daily nutrition totals
   const dailyTotals = calculateDailyTotals(
@@ -99,6 +100,16 @@ const Index = () => {
   const totalProtein = dailyTotals.protein;
   const totalCarbs = dailyTotals.carbs;
   const totalFat = dailyTotals.fat;
+  
+  // Filter food data based on activeFilter
+  const filteredFoodData = foodData.filter(food => {
+    if (activeFilter === 'All') return true;
+    return food.timestamp.includes(activeFilter);
+  });
+  
+  const handleFilterChange = (filter: string) => {
+    setActiveFilter(filter);
+  };
   
   const handleAddClick = () => {
     setIsAddModalOpen(true);
@@ -201,11 +212,14 @@ const Index = () => {
       <Header />
       
       <main className="container max-w-screen-xl mx-auto px-4 pt-24 pb-12">
-        <ControlPanel onAddClick={handleAddClick} />
+        <ControlPanel 
+          onAddClick={handleAddClick} 
+          onFilterChange={handleFilterChange}
+        />
         
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-10">
           <div className="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-            {foodData.map(food => (
+            {filteredFoodData.map(food => (
               <FoodCard 
                 key={food.id}
                 {...food}
